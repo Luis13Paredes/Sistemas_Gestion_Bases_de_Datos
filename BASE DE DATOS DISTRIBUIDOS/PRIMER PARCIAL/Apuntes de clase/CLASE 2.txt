@@ -1,0 +1,134 @@
+BASE DE DATOS DISTRIBUIDAS
+------------------------------------------------------------------------------------------------------------------------------
+-es una base de datos tradicional dividida en diferentes partes fisicamente dispersas y que acceden de forma logica.
+Transparencia: se puede ver los cambios que se realizan en los diferentes nodos.
+->rige el almacenamiento y procesamiento de datos logicamente relacionado por medio de sistemas de computadoras.
+y se distribuyen entre varios sitios.
+
+COMPONENTES:
+-sitios y nodos(clientes que usan los servicios)
+-Componentes Hardware y Software (gama baja,media y alta gama)
+-Medios de comunicacion (red)
+-Procesador de transacciones (Sistema de Gestion de Base de Datos)
+-Procesador de datos (En el servidor se podra configurar)
+
+CARACTERISTICAS:
+-Recibe la solicitud de una app o usuario
+-Valida,analiza y descompone la solicitud.Operaciones matematicas o logicas o ambas.
+-Descompone la solicitud de varias operaciones I/O de disco.
+-Busca,localiza,lee y valida los datos.
+-Garantiza la consistencia ,seguridad e integridad 
+-Valida los datos de conformidad con las condiciones.
+-Presenta los datos seleccionados en el formato requerido.
+-Todas las actividades son transparentes para el usuario.
+
+CLASIFICACION DE LAS BDD
+
+Peter Rob 2004 propuso las BDD
+-Se clasifican en Centralizadas y Distribuidas.En base a la distribucion y como estan soportados los datos.
+
+				DATOS EN UN SOLO	DATOS EN SITIOS 
+				SITIO			MULTIPLES
+				
+Proceso en un solo sitio
+
+
+Proceso en multiples sitios
+
+
+--Procesamiento en sitios multiples y en datos en sitios multiples (SMBDD HOMOGENAS)
+para que sean homogeneas deben radicar en los sistemas de gestion de base de datos distribuidas.
+
+--Procesamiento en sitios multiples y datos en sitios multiples(SMBDD HETEROGENEAS)
+
+
+VENTAJAS SGBDD
+-datos localizados cerca del sitio de mayor demanda.
+-Acceso mas rapido a datos.
+-Procesamiento mas rapido de los datos.
+-Facilita el crecimiento.
+-Comunicaciones mejoradas.
+-Costos de operacion reducido.
+-Interface de usuario facil de usar.
+-Menos peligro de falla en un solo punto.
+-Independencia del procesador.
+
+PROBLEMAS
+-El rendimiento puede afectarse por la carga de trabajo.
+-Confiabilidad de los sistemas distribuidos ,por la complejidad de los componentes.
+-Mayor complejidad ,alto costo de produccion.
+-Mayor complejidad en la implementacion.
+
+NIVELES DE TRANSPARENCIA
+Separacion de la semantica de alto nivel de un sistema de los aspectos de bajo nivel relacionados a la implementacion del mismo.
+Las caracteristicas permiten que el usuario sienta que es el unico que esta usando la BD.
+
+distribucion
+heterogeneidad
+desempeño
+falla
+replicacion
+transaccion
+
+DISTRIBUCION:Permite manejar la BD fisicamente como su fuese distribuida.Hay 3 niveles de distribucion segun ROB:
+										-Fragmentacion
+										-Ubicacion
+										-Ubicacion Total
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+CREATE USER UNIVERSIDAD IDENTIFIED BY UNIVERSIDAD;
+GRANT CONNECT,RESOURCE, UNLIMITED TABLESPACE, CREATE ANY VIEW TO UNIVERSIDAD;
+
+CREATE TABLE CAMPUS
+(ID_CAM VARCHAR(3) PRIMARY KEY,
+ NOM_CAM VARCHAR(20) NOT NULL,
+ UBI_CAM VARCHAR(20) NOT NULL);
+
+INSERT INTO CAMPUS VALUES('I', 'CAMPUS INGAURCO', 'INGAURCO');
+INSERT INTO CAMPUS VALUES('Q', 'CAMPUS QUEROCHACA', 'QUERO');
+INSERT INTO CAMPUS VALUES('H', 'CAMPUS HUACHI', 'HUACHI');
+
+CREATE TABLE CARRERAS
+(ID_CAR VARCHAR(5) PRIMARY KEY,
+ NOM_CAR VARCHAR(40) NOT NULL,
+ ID_CAM_CAR  VARCHAR(3) NOT NULL REFERENCES CAMPUS(ID_CAM));
+
+INSERT INTO CARRERAS VALUES('C01','TELECOMUNICACION','H');
+INSERT INTO CARRERAS VALUES('C02','CONTABILIDAD','H');
+INSERT INTO CARRERAS VALUES('C03','TURISMO','H');
+
+INSERT INTO CARRERAS VALUES('C04','VETERINARIA','Q');
+INSERT INTO CARRERAS VALUES('C05','AGRONOMIA','Q');
+INSERT INTO CARRERAS VALUES('C06','ZOOTECNIA','Q');
+
+INSERT INTO CARRERAS VALUES('C07','MEDICINA','I');
+INSERT INTO CARRERAS VALUES('C08','FISIOTERAPIA','I');
+INSERT INTO CARRERAS VALUES('C09','PSICOLOGIA','I');
+
+SELECT * 
+FROM CARRERAS
+WHERE ID_CAM_CAR = 'Q';
+
+SELECT * 
+FROM CARRERAS
+WHERE ID_CAM_CAR = 'H';
+
+SELECT * 
+FROM CARRERAS
+WHERE ID_CAM_CAR = 'I';
+
+CASO 2
+SELECT *
+FROM CARRERAS
+WHERE ID_CAM_CAR = 'Q';
+UNION
+SELECT *
+FROM CARRERAS
+WHERE ID_CAM_CAR = 'H';
+SELECT *
+FROM CARRERAS
+WHERE ID_CAM_CAR = 'I';
+
+https://github.com/Luis13Paredes/SGBDD
+
+PARA EL VIERNES DESCRIBIR EL EJEMPLO QUE SE ENCUENTRA DENTRO DEL BLOC DE NOTAS DE LA MATERIA

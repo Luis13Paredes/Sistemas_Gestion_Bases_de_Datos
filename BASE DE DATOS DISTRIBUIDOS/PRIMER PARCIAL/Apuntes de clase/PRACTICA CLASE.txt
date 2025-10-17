@@ -1,0 +1,38 @@
+PRACTICA EN CLASE
+postgres=# CREATE DATABASE musica OWNER postgres;
+CREATE DATABASE
+
+postgres=# CREATE USER luis WITH PASSWORD 'musica123';
+CREATE ROLE
+postgres=# \c musica
+You are now connected to database "musica" as user "postgres".
+
+CREATE TABLE orchestras (
+id int PRIMARY KEY, 
+name VARCHAR(32), 
+rating decimal ,
+city_origin VARCHAR(32), 
+country_region VARCHAR(32), 
+year int);
+
+
+CREATE TABLE concerts (
+id int PRIMARY KEY , 
+city VARCHAR(64), 
+country VARCHAR(64), 
+year int, 
+rating decimal, 
+orchestra_id int,
+CONSTRAINT fk_orchestra_concert FOREIGN KEY (orchestra_id) REFERENCES orchestras(id) 
+ON DELETE CASCADE 
+ON UPDATE CASCADE);
+
+CREATE TABLE members(
+id int PRIMARY KEY,
+name VARCHAR(64),
+position VARCHAR(32),
+experience int,
+orchesta_id int,
+CONSTRAIN fk_orchestra_members FOREIGN KEY (orchestra_id) REFERENCES orchestras(id)
+ON DELETE CASCADE
+ON UPDATE CASCADE);

@@ -1,0 +1,27 @@
+CLASE 5
+Fundamentos de subconsultas SQL
+es una sentencia incrustada en otra sentencia
+Podemos considerar las subconsultas como bloques que conforman consultas complejas: nos permiten descomponer tareas complejas en partes más pequeñas y simplificar la lectura del código.
+A continuación se muestran algunos casos de uso comunes para subconsultas SQL: 
+
+Filtrado de datos : Utilice subconsultas en la WHERE cláusula para filtrar datos según condiciones específicas, lo que hará que sus consultas sean más dinámicas. 
+
+Agregaciones anidadas : Utiliza subconsultas para realizar agregaciones dentro de otras agregaciones, lo que permite cálculos más complejos. 
+
+Comprobación de existencia : determinar si un valor específico existe en otra tabla utilizando subconsultas
+
+Subconsultas correlacionadas : Crea subconsultas que hacen referencia a columnas de la consulta externa, lo que permite el filtrado contextual. 
+
+Subconsulta en SELECT la cláusula : Incluya una subconsulta en la cláusula para recuperar un valor único o un conjunto de valores que puedan usarse en la consulta principal. 
+
+Subconsulta en FROM la cláusula : Use una subconsulta en la FROMcláusula para crear una tabla temporal, lo que permite uniones más complejas
+
+
+EJERCICIO 1:
+SELECT city
+From concerts
+WHERE year = 2013
+
+consulta
+comparacion de fragmentacion vertical -horizontal y el porque.
+

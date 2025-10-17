@@ -1,0 +1,133 @@
+-- =============================================================
+--  Base de datos distribuida simulada en Oracle
+--  Universidad Técnica de Ambato - UTA_Distribuida
+--  Sitios: Huachi, Ingahurco, Querochaca
+--  Concepto docente: replicación, fragmentación y transparencia
+-- =============================================================
+
+-- Limpieza opcional (DROP SCHEMAS simulados)
+DROP TABLE site_huachi_oferta_carrera CASCADE CONSTRAINTS;
+DROP TABLE site_ingahurco_oferta_carrera CASCADE CONSTRAINTS;
+DROP TABLE site_querochaca_oferta_carrera CASCADE CONSTRAINTS;
+
+DROP TABLE site_huachi_extensiones CASCADE CONSTRAINTS;
+DROP TABLE site_ingahurco_extensiones CASCADE CONSTRAINTS;
+DROP TABLE site_querochaca_extensiones CASCADE CONSTRAINTS;
+
+DROP TABLE site_huachi_carreras CASCADE CONSTRAINTS;
+DROP TABLE site_ingahurco_carreras CASCADE CONSTRAINTS;
+DROP TABLE site_querochaca_carreras CASCADE CONSTRAINTS;
+
+-- =============================================================
+-- MODELO LÓGICO
+-- =============================================================
+
+-- Carreras (replicada en los 3 sitios)
+CREATE TABLE site_huachi_carreras (
+    carrera_id    NUMBER PRIMARY KEY,
+    nombre        VARCHAR2(100) NOT NULL,
+    nivel         VARCHAR2(30)  NOT NULL,
+    modalidad     VARCHAR2(30)  NOT NULL,
+    codigo_sniese VARCHAR2(20),
+    duracion_sem  NUMBER(2)     NOT NULL
+);
+
+CREATE TABLE site_ingahurco_carreras AS SELECT * FROM site_huachi_carreras WHERE 1=0;
+CREATE TABLE site_querochaca_carreras AS SELECT * FROM site_huachi_carreras WHERE 1=0;
+
+-- Datos iniciales (replicados)
+INSERT INTO site_huachi_carreras VALUES (1,'Ingeniería en Sistemas','Pregrado','Presencial','UTA-IS',10);
+INSERT INTO site_huachi_carreras VALUES (2,'Ingeniería Civil','Pregrado','Presencial','UTA-IC',10);
+INSERT INTO site_huachi_carreras VALUES (3,'Administración de Empresas','Pregrado','Híbrida','UTA-AE',8);
+INSERT INTO site_huachi_carreras VALUES (4,'Enfermería','Pregrado','Presencial','UTA-ENF',10);
+
+INSERT INTO site_ingahurco_carreras SELECT * FROM site_huachi_carreras;
+INSERT INTO site_querochaca_carreras SELECT * FROM site_huachi_carreras;
+
+-- =============================================================
+-- Extensiones (fragmentación horizontal)
+CREATE TABLE site_huachi_extensiones (
+    extension_id NUMBER PRIMARY KEY, -- 100–199
+    nombre       VARCHAR2(120) NOT NULL,
+    campus       VARCHAR2(40)  NOT NULL,
+    ciudad       VARCHAR2(60)  NOT NULL,
+    direccion    VARCHAR2(160),
+    telefono     VARCHAR2(30)
+);
+
+CREATE TABLE site_ingahurco_extensiones AS SELECT * FROM site_huachi_extensiones WHERE 1=0;
+CREATE TABLE site_querochaca_extensiones AS SELECT * FROM site_huachi_extensiones WHERE 1=0;
+
+-- Datos por sede
+INSERT INTO site_huachi_extensiones VALUES (101,'Universidad Técnica de Ambato - Campus Huachi','Huachi','Ambato','Av. Los Chasquis s/n','(03) 299-0001');
+INSERT INTO site_ingahurco_extensiones VALUES (201,'Universidad Técnica de Ambato - Campus Ingahurco','Ingahurco','Ambato','Av. Colombia y Chile','(03) 299-0002');
+INSERT INTO site_querochaca_extensiones VALUES (301,'Universidad Técnica de Ambato - Campus Querochaca','Querochaca','Cevallos','Vía a Quero km 2','(03) 299-0003');
+
+-- =============================================================
+-- Oferta de carreras (fragmentación horizontal)
+CREATE TABLE site_huachi_oferta_carrera (
+    oferta_id    NUMBER PRIMARY KEY,
+    extension_id NUMBER NOT NULL,
+    carrera_id   NUMBER NOT NULL,
+    jornada      VARCHAR2(20) NOT NULL,
+    cupo         NUMBER NOT NULL,
+    estado       VARCHAR2(15) NOT NULL,
+    CONSTRAINT fk_ofh_ext FOREIGN KEY (extension_id) REFERENCES site_huachi_extensiones(extension_id),
+    CONSTRAINT fk_ofh_car FOREIGN KEY (carrera_id)   REFERENCES site_huachi_carreras(carrera_id)
+);
+
+CREATE TABLE site_ingahurco_oferta_carrera (
+    oferta_id    NUMBER PRIMARY KEY,
+    extension_id NUMBER NOT NULL,
+    carrera_id   NUMBER NOT NULL,
+    jornada      VARCHAR2(20) NOT NULL,
+    cupo         NUMBER NOT NULL,
+    estado       VARCHAR2(15) NOT NULL,
+    CONSTRAINT fk_ofi_ext FOREIGN KEY (extension_id) REFERENCES site_ingahurco_extensiones(extension_id),
+    CONSTRAINT fk_ofi_car FOREIGN KEY (carrera_id)   REFERENCES site_ingahurco_carreras(carrera_id)
+);
+
+CREATE TABLE site_querochaca_oferta_carrera (
+    oferta_id    NUMBER PRIMARY KEY,
+    extension_id NUMBER NOT NULL,
+    carrera_id   NUMBER NOT NULL,
+    jornada      VARCHAR2(20) NOT NULL,
+    cupo         NUMBER NOT NULL,
+    estado       VARCHAR2(15) NOT NULL,
+    CONSTRAINT fk_ofq_ext FOREIGN KEY (extension_id) REFERENCES site_querochaca_extensiones(extension_id),
+    CONSTRAINT fk_ofq_car FOREIGN KEY (carrera_id)   REFERENCES site_querochaca_carreras(carrera_id)
+);
+
+-- Datos de oferta
+INSERT INTO site_huachi_oferta_carrera VALUES (1101,101,1,'Matutina',60,'Activa');
+INSERT INTO site_huachi_oferta_carrera VALUES (1102,101,3,'Nocturna',40,'Activa');
+
+INSERT INTO site_ingahurco_oferta_carrera VALUES (2101,201,2,'Matutina',50,'Activa');
+INSERT INTO site_ingahurco_oferta_carrera VALUES (2102,201,1,'Vespertina',45,'Activa');
+
+INSERT INTO site_querochaca_oferta_carrera VALUES (3101,301,4,'Vespertina',35,'Activa');
+INSERT INTO site_querochaca_oferta_carrera VALUES (3102,301,3,'Nocturna',30,'Activa');
+
+-- =============================================================
+-- CAPA GLOBAL (Vistas unificadas)
+-- =============================================================
+
+CREATE OR REPLACE VIEW global_extensiones AS
+    SELECT * FROM site_huachi_extensiones
+    UNION ALL
+    SELECT * FROM site_ingahurco_extensiones
+    UNION ALL
+    SELECT * FROM site_querochaca_extensiones;
+
+CREATE OR REPLACE VIEW global_oferta_carrera AS
+    SELECT * FROM site_huachi_oferta_carrera
+    UNION ALL
+    SELECT * FROM site_ingahurco_oferta_carrera
+    UNION ALL
+    SELECT * FROM site_querochaca_oferta_carrera;
+
+-- Carreras replicada → elegimos HUACHI como copia autoritativa
+CREATE OR REPLACE VIEW global_carreras AS
+    SELECT * FROM site_huachi_carreras;
+
+COMMIT;

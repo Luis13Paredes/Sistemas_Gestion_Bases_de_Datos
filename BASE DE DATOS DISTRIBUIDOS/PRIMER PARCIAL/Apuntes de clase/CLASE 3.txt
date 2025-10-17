@@ -1,0 +1,66 @@
+CLASE 3 SGBDD
+Transparencia de Transaccion
+Permite que una transaccion actualice datos en varios sitios de la red.
+Garantiza que la transaccion se realizara o completara en su totalidad o abortara, con lo que se mantiene la integridad de la BD.
+
+FORMATO DE TRANSACCION
+ Begin WORK 		---> INICIO DE LA TRANSACCION
+ Select.....
+............		---> SOLICITUDES (Select,Update)
+............
+
+ COMMIT WORK		---> FIN DE LA TRANSACCION
+
+
+-Transaccion Distribuida: Actualiza y solicita datos de varios sitios en una red
+ Permite que una transaccion haga referencia a varios sitios de procesamiento de datos diferentes (locales y remotos).
+ Cada solicitud puede hacer referencia a solo un sitio de procesamiento de datos remotos.
+ Una solicitud distribuida permite hacer referencia a datos de varios sitios de procesamiento de datos remotos.
+ Proporciona capacidades de procesamiento de BD totalmente distribuida:
+	-Dividir una tabla en fragmentos
+	-Hacer referencia a uno o mas de esos fragmentos solamente con una solicitud.Se tiene transparencia de Fragmentacion.
+ 
+
+-Transaccion Remota: Esta compuesta de varias solicitudes remotasy puede acceder datos en solo un sitio.
+
+SOLICITUD REMOTA
+-Permite acceder datos que sera procesados por un solo procesadorde bas de datos remoto.
+-La setencia o solicitud SQL puede hacer referencia a datos en un solo sitio remoto.
+
+TRANSACICON REMOTA
+-La transaccion puede hacer referencia solamente a un procesador de datos remoto.
+-Cada sentencia o solicitud SQL puede hacer referencia solamente a un procesador de datos remoto(Gestor de BD) a la vez, y toda la transaccion puede hacer
+ referencia y ser ejecutada solo en un procesador de datos remoto.
+
+TRASPARENCIA DE REPLICACION
+Se refiere a que, si existen copias de objetos en la BD su existencia debe ser controlada por el "sistema" y no por el usuario
+
+TRANSPARENCIA DE FALLA
+Permite que el sistema continue operando en el caso de una falla de nodo, las funciones que se perdieron a causa de la falla seran recobradas por otro nodo de la red.
+
+TRANSPARENCIA DE DESEMPEñO
+Permite que cuando los objetos de la BD estan fragmentados ,el sistema maneja la conversion de consultas de usuario definidas sobre relaciones globales a consultas definidas sobre fragmentos. Asi tambien, mezcla las respuestas a consultas fragmentadas para obtener una sola respuesta a una consulta general.
+
+-Optimizacion de Consultas: Reducir al minimo el costo total asociado con la ejecucion de una solicitud.
+Los costos asociados con una solicitud son una funcion (Rob,2004)
+	-Del costo del tiempo de acceso E/S implicado al acceder los datos fisicos guardados en disco.
+	-Del costo de comunicacion asociado con la transmicion de datos entre nodos en sistemas de BDD.
+	-Del costo de tiempo de CPU asociado con la sobrecarga de procesamiento de manejar transacciones distribuidas.
+La mayoria de algoritmos propuestos se basan en 2 principios:
+	-Seleccion del orden de ejecucion optimo.
+	-Seleccion de sitios a ser accedidos para reducir 
+Los modos de operacion se clasifican como:
+	-Automatica: los  DDBSM localiza la ruta de acceso mas barata sin la intervencion del usuario.
+	-Manual: requiere que la optimizacion sea seleccionada y programada por el usuario o programador.
+
+En la optimizacion ESTATICA ,la mejor estrategia de optimizacion se selecciona cuando una consulta es compilada por el DDBSM.
+Tecnicas para la optimizacion de consultas:
+1.Basado en Estadisticas
+	Las estadisticas proporcionan informacion sobre caracteristicas de la BD (nombre,tamaño,numero de registros,etc)
+2.Basado en Reglas.
+	Conjunto de reglas definidas por el usuario para determinar la mejor estrategia de acceso a la consulta.
+	Las reglas son ingresadas por el usuario programador.
+
+TRANSPARENCIA DE HETEROGENEIDAD.
+Permite la integracion de varios sistemas de administracion de BD locales diferentes (relacional,red,jerargicos)
+

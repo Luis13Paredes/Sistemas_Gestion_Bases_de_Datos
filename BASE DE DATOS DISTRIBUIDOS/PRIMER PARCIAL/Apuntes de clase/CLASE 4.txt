@@ -1,0 +1,85 @@
+CLASE 4
+ARQUITECTURA DE SGBDD
+Arquitectura de SMBDD ANSI-SPARC divide a un sistema en 3 niveles: interno,conceptual y externo.
+
+ANSI-SPARC(AMERICAN )
+NIVEL EXTERNO: Esquema externo la seguridad debe ser exceltente para que no exista fallos al momento de utilizacion de los usuarios implicados y se muestran las replicas.
+NIVEL CONCEPTUAL: Se concentra en describir los atributos de la BD.Tambien se muestran las relaciones que existen entre tablas de la BD.(Modelo Relacional).
+NIVEL INTERNO: Esquema Fisico (Script de toda la Base de Datos).Describe la estructura de la BD mediante un esquema fisico.
+
+Los unicos datos que existen realmente estan a nivel fisico, almacenados en un dispositivo como puede ser un disco.
+
+Solicitud Esquema Externo (VISTAS) --> Esquema Conceptual (RELACIONES) --> Esquema Interno (FISICO)---> BASE DE DATOS.
+
+Arquitectura ANSI-SPARC de un sistema distribuido
+Se identifican los diferentes tipos de descripcion de datos.
+-Define las unidades funcionales que realizaran y/o usaran los datos.
+
+SISTEMA DE ADMNINISTRACION DE BDD HOMOGENEOS
+-Tiene multiples colecciones.
+-Integra multiples recursos de datos.
+-Se parecen a un sistema centralizado.Datos en varios sitios comunicados por la red.
+-No existen usuarios locales y todos ellos acceden a traves de una interfaz global.
+-El esquema global es la union de todas las descripciones de datos locales.
+Su desventaja son los recursos
+
+Para manejar aspectos de la distribucion, se debe agregar 2 niveles a la arquitectura ANSI-SPARC
+-El esquema de fragmentacion describe la forma en que las relaciones globales se dividen entre las BD locales.
+-El esquema de asignamiento especifica el lugar en el cual cada fragmento es almacenado.
+
+SISTEMA DE ADMINISTRACION DE BDD HETEROGENEO
+Segun David Bell (Bell , 1992) se caracterizan por manejar diferentes sistemas de administracion de BDD en los nodos locales.
+-Una subclase son los sistemas de administración de multi-bases de
+datos
+-Un sistema multi-bases de datos (Smulti-BD) tiene múltiples sistemas manejadores de base de datos, que pueden ser de tipos diferentes y múltiples bases de datos existentes. La integración de todos ellos se
+realiza mediante subsistemas de software.
+-Existen usuarios locales y globales. Los usuarios locales acceden sus bases de datos locales sin verse afectados por la presencia del sistema administrador de multi-base de datos.
+
+Se basa en los principios del diseño de una base de datos centralizada y contempla los tres puntos siguientes (Marqués, 2001):
+1. Diseño conceptual de la base de datos.
+2. Diseño lógico de la base de datos.
+3. Diseño físico de la base de datos
+
+DISEñO FISICO DE LA BASE DE DATOS.
+En el caso de las bases de datos distribuidas se tienen que
+considerar adicionalmente los tres problemas siguientes (Rob, 2004):
+1. Cómo dividir la base de datos en fragmentos.
+2. Qué fragmentos replicar.
+3. Dónde localizar estos fragmentos y réplicas.
+La fragmentación y replicación de los datos se ocupa de los dos primeros problemas, mientras que la colocación de los datos con el tercero.
+
+OBJETIVOS DEL DISEñO DE LA DISTRIBUCION DE LOS DATOS.
+-Procesamiento local: coloca los datos tan cerca como sea posible de las aplicacions que los utilizan.
+Los datos se puede agregar el numero de referencias locales y remotas que les corresponden a cada fragmentacion candidata y la localizacion del fragmento y de esta forma se selecciona la mejor solucion de ellas.4
+
+-Distribucion de la carga de trabajo: Se realiza para tomar ventaja de las diferentes caracteristicas o utlizaciones de las computadoras de cada sitio y maximizar el grado de ejecucion de paralelismo de las apps.
+
+-Costo de Almacenamiento:es posible tener sitios especializados en la red para el almacenamiento de datos.
+El costo de almacenamiento de datos no es tan relevante si este se compara con el del CPU, I/O de transmission de las app y disponibilidad.
+
+PROBLEMA DE LA FRAGMENTACION
+Se refiere al particionamiento de la informacion para distribuir cada parte de los diferentes sitios de la red.
+El diseño de una base de datos distribuida , cualquiera que sea el enfoque que se siga,debe responder satisfactoriamente las siguientes preguntas:
+a. ¿Por qué hacer una fragmentación de datos?
+b. ¿Cómo realizar la fragmentación?
+c. ¿Qué tanto se debe fragmentar?
+d. ¿Cómo probar la validez de una fragmentación?
+e. ¿Cómo realizar el asignamiento de fragmentos?
+f. ¿Cómo considerar los requerimientos de la información?
+
+FRAGENTACION DE UNA BASE DE DATOS DISTRIBUIDA
+Peter Rob (Rob,2004) afirma que la fragmentacion de los datos permite dividir un objeto en 2 o mas segmentos o fragmentos.
+Objeto:
+-Base de datos de usuario
+-Base de datos de sistema
+-Una Tabla
+Cada fragmento puede guardarse en cualquier sitio en una red de computadoras.
+La informacion de la fragmentacion de los datos se guarda en un cartalogo de datos distribuidos (DDC, DISTRIBUITED DATA CATALOG) desde donde es accedida por el procesador de transacciones para procesar las solicitudes de los usuarios.
+
+La tabla se divide en fragmentos logicos:
+*Fragmentacion horizontal: se refiere a la division de una relacion en subconjunto de tuplas(filas).
+Cada fragmento se guarda en un nodo diferente y cada uno de ellos tienen filas unicas
+Todas las filas unicas tienen los mismo atributos (columnas). En suma cada fragmento equivale a una sentencia SELECT con la clausula WHERE en un solo atributo.
+*Fragmentacion Vertical: se refiere a la division de una relacion en subconjuntos de atributos(columnas).
+Cada subconjunto se guarda en un nodo diferente y cada fragmento tiene colunmas unicas con la excepcion de la columna clave.
+*Fragmentacion Mezclada: Se refiere a la combinacion de estrategias horizontales y verticales. En otras palabras una tabla puede dividirse en varios subconjuntos horizontales(filas) y cada una tiene un subconjunto de los atributos(columnas).
